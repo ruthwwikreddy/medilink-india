@@ -162,9 +162,6 @@ export const NavBar = () => {
                                 <ShieldCheck className="h-4 w-4 text-trustBlue-400 mr-2" />
                                 <div className="text-sm font-medium">Security Features</div>
                               </div>
-                              <p className="line-clamp-2 text-sm leading-snug text-gray-400">
-                                HIPAA-compliant protection for your sensitive medical data
-                              </p>
                             </a>
                           </NavigationMenuLink>
                         </li>

@@ -154,7 +154,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, type })
         </div>
         
         <div className="flex items-center justify-center gap-2 -mt-2">
-          <TrustIndicator type="hipaa" />
           <TrustIndicator type="encrypted" />
         </div>
         

@@ -50,10 +50,6 @@ export const HeroSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left column - Text content */}
           <div className="stagger-animation space-y-6 max-w-lg">
-            <Badge variant="trust" className="mb-2">
-              <ShieldCheck className="h-3.5 w-3.5 mr-1" />
-              HIPAA Compliant Healthcare Platform
-            </Badge>
             
             <h1 className="font-bold tracking-tight text-white">
               <span className="block text-4xl md:text-5xl lg:text-6xl mb-3">Your Health,</span>
