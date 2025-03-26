@@ -121,31 +121,6 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
-          
-          {/* Contact */}
-          <div className="md:col-span-1 lg:col-span-1">
-            <h3 className="text-lg font-semibold mb-4 text-white">Contact</h3>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-trustBlue-900/50 flex items-center justify-center text-trustBlue-400">
-                  <Mail className="h-4 w-4" />
-                </div>
-                <span className="text-sm">support@medilink.com</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-trustBlue-900/50 flex items-center justify-center text-trustBlue-400">
-                  <Phone className="h-4 w-4" />
-                </div>
-                <span className="text-sm">+1 (800) 123-4567</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-trustBlue-900/50 flex items-center justify-center text-trustBlue-400">
-                  <MapPin className="h-4 w-4" />
-                </div>
-                <span className="text-sm">123 Medical Ave, San Francisco, CA</span>
-              </li>
-            </ul>
-          </div>
         </div>
 
         {/* Bottom Section */}
