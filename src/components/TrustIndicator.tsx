@@ -4,7 +4,7 @@ import { LockKeyhole, Shield, ShieldCheck, FileWarning, AlertTriangle, Clock, Us
 import { cn } from "@/lib/utils";
 
 type TrustIndicatorProps = {
-  type: 'hipaa' | 'encrypted' | 'secure' | 'certified' | 'warning' | 'urgent' | 'verified' | 'restricted';
+  type: 'encrypted' | 'secure' | 'certified' | 'warning' | 'urgent' | 'verified' | 'restricted';
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   showIcon?: boolean;
@@ -24,12 +24,6 @@ export const TrustIndicator = ({
   
   const getContent = () => {
     switch (type) {
-      case 'hipaa':
-        return {
-          icon: <Shield className="w-3.5 h-3.5" />,
-          text: 'HIPAA Compliant',
-          classes: 'bg-trustBlue-900/30 text-trustBlue-300 border-trustBlue-700/30'
-        };
       case 'encrypted':
         return {
           icon: <LockKeyhole className="w-3.5 h-3.5" />,
