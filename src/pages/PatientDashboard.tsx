@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavBar } from '@/components/NavBar';
 import { Footer } from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,20 +14,45 @@ import MedicalRecordsContent from "@/components/patient/MedicalRecordsContent";
 import PrescriptionsContent from "@/components/patient/PrescriptionsContent";
 import AppointmentsContent from "@/components/patient/AppointmentsContent";
 import ResourcesContent from "@/components/patient/ResourcesContent";
-import { 
-  User, Bell, CalendarClock, Calendar as CalendarIcon, 
-  FileText, ClipboardList, Search, Pill, Clock, 
-  FileMinus, Phone, MapPin, QrCode, Info, Book, 
-  Heart, Bookmark, Share, CheckCircle2, AlertCircle, 
+import {
+  User, Bell, CalendarClock, Calendar as CalendarIcon,
+  FileText, ClipboardList, Search, Pill, Clock,
+  FileMinus, Phone, MapPin, QrCode, Info, Book,
+  Heart, Bookmark, Share, CheckCircle2, AlertCircle,
   Settings, LayoutGrid, Eye, MousePointerClick, RefreshCcw,
-  ChevronRight, Plus, MoreHorizontal, BarChart3
+  ChevronRight, Plus, MoreHorizontal, BarChart3,
+  Sparkles, Brain, Zap, Activity, TrendingUp, MessageSquare
 } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { toast } from "sonner";
 
 const PatientDashboard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const { profile } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
-  
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [showAiInsights, setShowAiInsights] = useState(false);
+
+  const handleGenerateAiInsights = () => {
+    setAiGenerating(true);
+    setTimeout(() => {
+      setAiGenerating(false);
+      setShowAiInsights(true);
+      toast.success("Health Analysis Complete", {
+        description: "Your daily wellness report is ready."
+      });
+    }, 2000);
+  };
+
+  useEffect(() => {
+    if (activeTab === 'emergency') {
+      window.open('https://emergency-uha7.onrender.com/', '_blank');
+      toast.info("Emergency Demo Launched", {
+        description: "Opening emergency services in a new tab."
+      });
+    }
+  }, [activeTab]);
+
   return (
     <div className="flex flex-col min-h-screen bg-neutral-950">
       <NavBar />
@@ -49,7 +74,7 @@ const PatientDashboard = () => {
                     <TrustIndicator type="secure" className="ml-2" />
                   </div>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2">
                   <Button variant="trust" size="sm" className="flex items-center gap-1.5 h-8">
                     <Bell className="h-3.5 w-3.5" />
@@ -67,7 +92,7 @@ const PatientDashboard = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Dashboard Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
             <TabsList className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 mb-4 w-full max-w-full overflow-x-auto flex-nowrap">
@@ -90,17 +115,102 @@ const PatientDashboard = () => {
                 Resources
               </TabsTrigger>
             </TabsList>
-            
+
             {/* Overview Tab Content */}
             <TabsContent value="overview" className="mt-0 space-y-4">
+              {/* AI Health Companion Card */}
+              <Card className="neo-card bg-neutral-900 border-neutral-800 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-3 opacity-5">
+                  <Brain className="w-32 h-32 text-trustBlue-400" />
+                </div>
+                <CardHeader className="pb-2 px-4 pt-4 relative z-10">
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-base text-white flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-trustBlue-400" />
+                      AI Health Companion
+                    </CardTitle>
+                    <Badge variant="outline" className="text-xs border-trustBlue-800 text-trustBlue-400">Beta</Badge>
+                  </div>
+                  <CardDescription className="text-xs">Personalized wellness insights & recommendations</CardDescription>
+                </CardHeader>
+                <CardContent className="px-4 py-2 relative z-10">
+                  {!showAiInsights ? (
+                    <div className="flex flex-col items-center justify-center py-6 text-center space-y-4">
+                      <div className="bg-trustBlue-900/20 p-3 rounded-full ring-1 ring-trustBlue-500/20">
+                        <Brain className="w-6 h-6 text-trustBlue-400" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-white font-medium text-sm">Check Your Wellness Score</p>
+                        <p className="text-xs text-neutral-400 max-w-[250px] mx-auto">
+                          Analyze your recent activity, sleep, and vitals to get a daily health score.
+                        </p>
+                      </div>
+                      <Button
+                        variant="trust"
+                        size="sm"
+                        onClick={handleGenerateAiInsights}
+                        disabled={aiGenerating}
+                        className="w-full max-w-[180px]"
+                      >
+                        {aiGenerating ? (
+                          <>
+                            <RefreshCcw className="mr-2 h-3.5 w-3.5 animate-spin" />
+                            Analyzing...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="mr-2 h-3.5 w-3.5" />
+                            Analyze Health
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="bg-neutral-800/50 p-2 rounded-lg border border-neutral-700/50 text-center">
+                          <p className="text-xs text-neutral-400">Wellness Score</p>
+                          <p className="text-xl font-bold text-green-400">92</p>
+                        </div>
+                        <div className="bg-neutral-800/50 p-2 rounded-lg border border-neutral-700/50 text-center">
+                          <p className="text-xs text-neutral-400">Sleep Quality</p>
+                          <p className="text-xl font-bold text-trustBlue-400">8.5h</p>
+                        </div>
+                        <div className="bg-neutral-800/50 p-2 rounded-lg border border-neutral-700/50 text-center">
+                          <p className="text-xs text-neutral-400">Activity</p>
+                          <p className="text-xl font-bold text-amber-400">High</p>
+                        </div>
+                      </div>
+                      <div className="bg-trustBlue-900/10 border border-trustBlue-900/30 p-3 rounded-lg">
+                        <div className="flex items-start gap-2">
+                          <Sparkles className="w-4 h-4 text-trustBlue-400 mt-0.5" />
+                          <div>
+                            <p className="text-sm font-medium text-white">Recommendation</p>
+                            <p className="text-xs text-neutral-400 mt-1">
+                              Your heart rate variability is excellent today. Consider a high-intensity workout to maximize your energy levels.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Medical Summary Widget */}
                 <Card className="neo-card bg-neutral-900 border-neutral-800">
                   <CardHeader className="pb-2 px-4 pt-4">
                     <div className="flex justify-between items-center">
                       <CardTitle className="text-base text-white">Medical Summary</CardTitle>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-auto px-2 text-xs text-trustBlue-400 hover:text-trustBlue-300 hover:bg-trustBlue-900/20"
+                        onClick={() => toast.success("Vitals Synced", { description: "Data retrieved from your wearable device." })}
+                      >
+                        <RefreshCcw className="h-3 w-3 mr-1" />
+                        Sync Wearable
                       </Button>
                     </div>
                     <CardDescription className="text-xs">Recent health updates</CardDescription>
@@ -108,21 +218,35 @@ const PatientDashboard = () => {
                   <CardContent className="px-4 py-2">
                     <div className="space-y-2">
                       <div className="bg-neutral-800 p-2.5 rounded-lg border border-neutral-700">
-                        <div className="flex items-start gap-2">
-                          <FileText className="h-4 w-4 text-trustBlue-400 mt-0.5" />
-                          <div>
-                            <div className="text-sm font-medium text-white">Blood Test Results</div>
-                            <div className="text-xs text-neutral-400">Cholesterol: Normal range</div>
-                            <div className="flex items-center mt-1">
-                              <Badge variant="outline" className="text-xs h-5">
-                                <CheckCircle2 className="mr-1 h-3 w-3 text-green-500" />
-                                All normal
-                              </Badge>
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-start gap-2">
+                            <Activity className="h-4 w-4 text-trustBlue-400 mt-0.5" />
+                            <div>
+                              <div className="text-sm font-medium text-white">Heart Rate Trend</div>
+                              <div className="text-xs text-neutral-400">Avg: 72 bpm</div>
                             </div>
                           </div>
+                          <Badge variant="outline" className="text-[10px] h-4 px-1 text-green-400 border-green-900 bg-green-900/10">
+                            Normal
+                          </Badge>
+                        </div>
+                        <div className="h-[40px] w-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={[
+                              { v: 68 }, { v: 72 }, { v: 70 }, { v: 74 }, { v: 72 }, { v: 75 }, { v: 71 }, { v: 72 }
+                            ]}>
+                              <defs>
+                                <linearGradient id="colorHr" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                </linearGradient>
+                              </defs>
+                              <Area type="monotone" dataKey="v" stroke="#3b82f6" fillOpacity={1} fill="url(#colorHr)" strokeWidth={2} />
+                            </AreaChart>
+                          </ResponsiveContainer>
                         </div>
                       </div>
-                      
+
                       <div className="bg-neutral-800 p-2.5 rounded-lg border border-neutral-700">
                         <div className="flex items-start gap-2">
                           <AlertCircle className="h-4 w-4 text-warmAccent-500 mt-0.5" />
@@ -141,9 +265,9 @@ const PatientDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="px-4 py-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="w-full justify-between text-xs h-7"
                       onClick={() => setActiveTab("records")}
                     >
@@ -152,14 +276,20 @@ const PatientDashboard = () => {
                     </Button>
                   </CardFooter>
                 </Card>
-                
+
                 {/* Upcoming Appointments Widget */}
                 <Card className="neo-card bg-neutral-900 border-neutral-800">
                   <CardHeader className="pb-2 px-4 pt-4">
                     <div className="flex justify-between items-center">
                       <CardTitle className="text-base text-white">Upcoming Appointments</CardTitle>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                        <Plus className="h-4 w-4" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-auto px-2 text-xs text-trustBlue-400 hover:text-trustBlue-300 hover:bg-trustBlue-900/20"
+                        onClick={() => toast.info("Smart Scheduling", { description: "AI is finding the best slot for you..." })}
+                      >
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        Smart Book
                       </Button>
                     </div>
                     <CardDescription className="text-xs">Schedule & reminders</CardDescription>
@@ -187,7 +317,7 @@ const PatientDashboard = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="bg-neutral-800 p-2.5 rounded-lg border border-neutral-700">
                         <div className="flex items-center justify-between mb-1">
                           <div className="text-sm font-medium text-white">Dr. Michael Lee</div>
@@ -209,9 +339,9 @@ const PatientDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="px-4 py-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="w-full justify-between text-xs h-7"
                       onClick={() => setActiveTab("appointments")}
                     >
@@ -220,7 +350,7 @@ const PatientDashboard = () => {
                     </Button>
                   </CardFooter>
                 </Card>
-                
+
                 {/* Calendar Widget */}
                 <Card className="neo-card bg-neutral-900 border-neutral-800">
                   <CardHeader className="pb-2 px-4 pt-4">
@@ -243,9 +373,9 @@ const PatientDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="px-4 py-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="w-full justify-between text-xs h-7"
                       onClick={() => setActiveTab("appointments")}
                     >
@@ -255,7 +385,7 @@ const PatientDashboard = () => {
                   </CardFooter>
                 </Card>
               </div>
-              
+
               {/* Second row widgets */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Prescription Tracker */}
@@ -293,7 +423,7 @@ const PatientDashboard = () => {
                           </Badge>
                         </div>
                       </div>
-                      
+
                       <div className="bg-neutral-800 p-2.5 rounded-lg border border-neutral-700">
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
@@ -324,9 +454,9 @@ const PatientDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="px-4 py-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="w-full justify-between text-xs h-7"
                       onClick={() => setActiveTab("prescriptions")}
                     >
@@ -335,7 +465,7 @@ const PatientDashboard = () => {
                     </Button>
                   </CardFooter>
                 </Card>
-                
+
                 {/* Replace Emergency Card with a preview version linking to full tab */}
                 <Card className="neo-card bg-neutral-900 border-neutral-800">
                   <CardHeader className="pb-2 px-4 pt-4">
@@ -363,28 +493,28 @@ const PatientDashboard = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="bg-neutral-800 p-2.5 rounded-lg border border-neutral-700">
                         <div className="text-sm font-medium text-white mb-1">Critical Information</div>
                         <div className="space-y-1.5 text-xs">
                           <div className="flex items-start gap-1.5">
                             <Info className="h-3 w-3 text-warmAccent-500 mt-0.5 flex-shrink-0" />
                             <div>
-                              <span className="text-neutral-300">Blood Type:</span> 
+                              <span className="text-neutral-300">Blood Type:</span>
                               <span className="text-white ml-1">O+</span>
                             </div>
                           </div>
                           <div className="flex items-start gap-1.5">
                             <Info className="h-3 w-3 text-warmAccent-500 mt-0.5 flex-shrink-0" />
                             <div>
-                              <span className="text-neutral-300">Allergies:</span> 
+                              <span className="text-neutral-300">Allergies:</span>
                               <span className="text-white ml-1">None</span>
                             </div>
                           </div>
                           <div className="flex items-start gap-1.5">
                             <Info className="h-3 w-3 text-warmAccent-500 mt-0.5 flex-shrink-0" />
                             <div>
-                              <span className="text-neutral-300">Emergency Contact:</span> 
+                              <span className="text-neutral-300">Emergency Contact:</span>
                               <span className="text-white ml-1">+1 (555) 123-4567</span>
                             </div>
                           </div>
@@ -393,9 +523,9 @@ const PatientDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="px-4 py-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="w-full justify-between text-xs h-7"
                       onClick={() => setActiveTab("emergency")}
                     >
@@ -405,15 +535,21 @@ const PatientDashboard = () => {
                   </CardFooter>
                 </Card>
               </div>
-              
+
               {/* Health Resources */}
               <div>
                 <Card className="neo-card bg-neutral-900 border-neutral-800">
                   <CardHeader className="pb-2 px-4 pt-4">
                     <div className="flex justify-between items-center">
                       <CardTitle className="text-base text-white">Health Resources</CardTitle>
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                        <Book className="h-4 w-4" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-auto px-2 text-xs text-trustBlue-400 hover:text-trustBlue-300 hover:bg-trustBlue-900/20"
+                        onClick={() => toast.info("Symptom Checker", { description: "Describe your symptoms to the AI assistant." })}
+                      >
+                        <MessageSquare className="h-3 w-3 mr-1" />
+                        Symptom Check
                       </Button>
                     </div>
                     <CardDescription className="text-xs">Personalized for your health needs</CardDescription>
@@ -440,7 +576,7 @@ const PatientDashboard = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="bg-neutral-800 p-2.5 rounded-lg border border-neutral-700 hover:border-trustBlue-600 transition-colors">
                         <div className="flex items-center gap-2 mb-1">
                           <div className="h-7 w-7 rounded-full bg-trustBlue-900/50 flex items-center justify-center">
@@ -461,7 +597,7 @@ const PatientDashboard = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="bg-neutral-800 p-2.5 rounded-lg border border-neutral-700 hover:border-trustBlue-600 transition-colors">
                         <div className="flex items-center gap-2 mb-1">
                           <div className="h-7 w-7 rounded-full bg-trustBlue-900/50 flex items-center justify-center">
@@ -485,9 +621,9 @@ const PatientDashboard = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="px-4 py-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="w-full justify-between text-xs h-7"
                       onClick={() => setActiveTab("resources")}
                     >
@@ -498,27 +634,43 @@ const PatientDashboard = () => {
                 </Card>
               </div>
             </TabsContent>
-            
+
             {/* Medical Records Tab Content */}
             <TabsContent value="records" className="mt-0">
               <MedicalRecordsContent />
             </TabsContent>
-            
+
             {/* Prescriptions Tab Content */}
             <TabsContent value="prescriptions" className="mt-0">
               <PrescriptionsContent />
             </TabsContent>
-            
+
             {/* Appointments Tab Content */}
             <TabsContent value="appointments" className="mt-0">
               <AppointmentsContent />
             </TabsContent>
-            
+
             {/* Emergency Card Tab Content */}
             <TabsContent value="emergency" className="mt-0">
-              <EmergencyCard />
+              <div className="flex flex-col items-center justify-center p-12 text-center space-y-4 bg-neutral-900 border border-neutral-800 rounded-xl">
+                <div className="bg-red-900/20 p-4 rounded-full">
+                  <AlertCircle className="w-12 h-12 text-red-500" />
+                </div>
+                <h3 className="text-xl font-bold text-white">Emergency Services Demo</h3>
+                <p className="text-neutral-400 max-w-md">
+                  The emergency services module has been opened in a new tab. If it didn't open automatically, please click the button below.
+                </p>
+                <Button
+                  variant="destructive"
+                  size="lg"
+                  onClick={() => window.open('https://emergency-uha7.onrender.com/', '_blank')}
+                  className="mt-4"
+                >
+                  Launch Emergency Demo
+                </Button>
+              </div>
             </TabsContent>
-            
+
             {/* Resources Tab Content */}
             <TabsContent value="resources" className="mt-0">
               <ResourcesContent />
