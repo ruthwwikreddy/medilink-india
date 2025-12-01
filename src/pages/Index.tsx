@@ -283,7 +283,7 @@ const Index = () => {
                   </li>
                 </ul>
                 <a
-                  href="https://emergency-uha7.onrender.com/rm8newf"
+                  href="https://emergency-uha7.onrender.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-500 transition-colors shadow-lg shadow-red-900/20 inline-flex items-center gap-2"

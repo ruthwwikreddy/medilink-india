@@ -663,7 +663,7 @@ const PatientDashboard = () => {
                 <Button
                   variant="destructive"
                   size="lg"
-                  onClick={() => window.open('https://emergency-uha7.onrender.com/', '_blank')}
+                  onClick={() => window.open('https://emergency-uha7.onrender.com/rm8newf', '_blank')}
                   className="mt-4"
                 >
                   Launch Emergency Demo
